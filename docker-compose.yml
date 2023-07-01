@@ -10,6 +10,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: example
+    ports: 
+      - 3307:3306
 
   # navicat
   adminer:
