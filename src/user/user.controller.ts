@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config/dist';
+import { User } from './user.entity';
 @Controller('user')
 export class UserController {
   constructor(
@@ -10,16 +11,36 @@ export class UserController {
 
   @Get()
   getUsers(): any {
-    const db = this.configService.get('DB');
-    const host = this.configService.get('DB_HOST');
+    return this.userService.findAll();
+  }
+
+  @Post()
+  addUser(info: Partial<User>): any {
     console.log(
-      '🚀 ~ file: user.controller.ts:15 ~ UserController ~ getUsers ~ host:',
-      host,
+      '🚀 ~ file: user.controller.ts:19 ~ UserController ~ addUser ~ info:',
+      info,
     );
-    console.log(
-      '🚀 ~ file: user.controller.ts:14 ~ UserController ~ getUsers ~ db:',
-      db,
-    );
-    return this.userService.getUsers();
+    info = {
+      username: 'aaa',
+      password: 'bba',
+      email: 'ccc',
+    };
+    return this.userService.create(info);
+  }
+
+  @Patch()
+  updateUser(): any {
+    const user = { username: 'username' } as User;
+    return this.userService.update(1, user);
+  }
+
+  @Delete()
+  deleteUser(): any {
+    return this.userService.remove(1);
+  }
+
+  @Get('/profile')
+  getUserProfile(): any {
+    return this.userService.findProfile(2);
   }
 }
