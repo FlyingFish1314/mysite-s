@@ -3,16 +3,11 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import * as dotenv from 'dotenv';
 import * as Joi from 'joi';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config/dist';
-import { ConfigEnum } from './enum/config.enum';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { User } from './user/user.entity';
-import { Profile } from './user/profile.entity';
-import { Logs } from './logs/logs.entity';
-import { Roles } from './roles/roles.entity';
 import { LogsModule } from './logs/logs.module';
 import { RolesModule } from './roles/roles.module';
+import ormconfig from '../ormconfig';
 
 const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
 
@@ -37,24 +32,7 @@ const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
         DB_SYNC: Joi.boolean().default(false),
       }),
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        ({
-          type: configService.get(ConfigEnum.DB_TYPE),
-          host: configService.get(ConfigEnum.DB_HOST),
-          port: configService.get(ConfigEnum.DB_PORT),
-          username: configService.get(ConfigEnum.DB_USERNAME),
-          password: configService.get(ConfigEnum.DB_PASSWORD),
-          database: configService.get(ConfigEnum.DB_DATABASE),
-          entities: [User, Profile, Logs, Roles],
-          // 同步本地的schema与数据库 ->初始化的时候去使用
-          synchronize: configService.get(ConfigEnum.DB_SYNC),
-          logging: ['error'],
-          // logging: process.env.NODE_ENV === 'development',
-        } as TypeOrmModuleOptions),
-    }),
+    TypeOrmModule.forRoot(ormconfig),
     UserModule,
     LogsModule,
     RolesModule,
