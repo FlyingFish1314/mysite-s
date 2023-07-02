@@ -7,7 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { LogsModule } from './logs/logs.module';
 import { RolesModule } from './roles/roles.module';
-import ormconfig from '../ormconfig';
+
+import { connectionParams } from '../ormconfig';
 
 const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
 
@@ -24,15 +25,20 @@ const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
           .default('development'),
         DB_PORT: Joi.number().default(3306),
         DB_URL: Joi.string().domain(),
-        DB_HOST: Joi.string().ip(),
+        DB_HOST: Joi.alternatives().try(
+          Joi.string().ip(),
+          Joi.string().domain(),
+        ),
         DB_TYPE: Joi.string().valid('mysql'),
         DB_DATABASE: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_SYNC: Joi.boolean().default(false),
+        LOG_ON: Joi.boolean(),
+        LOG_LEVEL: Joi.string(),
       }),
     }),
-    TypeOrmModule.forRoot(ormconfig),
+    TypeOrmModule.forRoot(connectionParams),
     UserModule,
     LogsModule,
     RolesModule,
