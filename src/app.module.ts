@@ -11,6 +11,7 @@ import { User } from './user/user.entity';
 import { Profile } from './user/profile.entity';
 import { Logs } from './logs/logs.entity';
 import { Roles } from './roles/roles.entity';
+import { LogsModule } from './logs/logs.module';
 
 const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
 
@@ -54,6 +55,7 @@ const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
         } as TypeOrmModuleOptions),
     }),
     UserModule,
+    LogsModule,
   ],
   controllers: [],
   providers: [Logger],
