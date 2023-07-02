@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Logger, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Patch,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config/dist';
 import { User } from './user.entity';
@@ -16,9 +24,17 @@ export class UserController {
 
   @Get()
   getUsers(): any {
-    this.logger.log(`请求getUsers成功`);
-    this.logger.warn(`请求getUsers成功`);
-    this.logger.error(`请求getUsers成功`);
+    const user = { isAdmin: false };
+    if (!user.isAdmin) {
+      throw new UnauthorizedException('用户没有权限');
+      // throw new HttpException(
+      //   'User is not admin, Forbidden to access getAllUsers',
+      //   HttpStatus.FORBIDDEN,
+      // );
+    }
+    // this.logger.log(`请求getUsers成功`);
+    // this.logger.warn(`请求getUsers成功`);
+    // this.logger.error(`请求getUsers成功`);
     return this.userService.findAll();
   }
 
