@@ -12,6 +12,7 @@ import { Profile } from './user/profile.entity';
 import { Logs } from './logs/logs.entity';
 import { Roles } from './roles/roles.entity';
 import { LogsModule } from './logs/logs.module';
+import { RolesModule } from './roles/roles.module';
 
 const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
 
@@ -56,6 +57,7 @@ const envFilePath = `.env.${process.env.NODE_ENV || `development`}`;
     }),
     UserModule,
     LogsModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [Logger],
